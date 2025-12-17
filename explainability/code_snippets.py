@@ -1,21 +1,18 @@
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
+BASE = Path(__file__).parent
 
-def load_code(project: str, path: str) -> str:
-    return (BASE_DIR / project / path).read_text()
+def load(project, path):
+    return (BASE / project / path).read_text()
 
-CLEAN_BAG_OF_PHRASES_CODE = load_code(
-    "project_1", "logic/text_cleaning.py"
-)
+# Project 1
+CLEAN_BAG_OF_PHRASES_CODE = load("project_1", "logic/text_cleaning.py")
+ANALYZE_POPULARITY_CODE = load("project_1", "logic/popularity.py")
+FIND_K_PLEXES_CODE = load("project_1", "logic/kplex.py")
 
-ANALYZE_POPULARITY_CODE = load_code(
-    "project_1", "logic/popularity.py"
-)
-
-FIND_K_PLEXES_CODE = load_code(
-    "project_1", "logic/kplex.py"
-)
+# Project 2
+ANALYZE_CODE = load("project_2", "logic/weakness.py")
+DEFORM_CODE = load("project_2", "logic/deformation.py")
 
 # # explainability/code_snippets.py
 

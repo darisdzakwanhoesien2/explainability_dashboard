@@ -8,15 +8,16 @@ from explainability.diagrams import (
     build_clean_bag_of_phrases_network,
     build_analyze_popularity_network,
     build_find_k_plexes_network,
-    build_combined_network,
-    render_pyvis,
+    build_news_combined_network,
+    render_pyvis_project_1,
 )
+
 
 st.set_page_config(layout="wide")
 st.title("News Popularity Explainability Dashboard")
 
 st.header("End-to-End Explainability (Combined DAG)")
-render_pyvis(build_combined_network(), height=700)
+render_pyvis_project_1(build_news_combined_network(), height=700)
 
 st.divider()
 

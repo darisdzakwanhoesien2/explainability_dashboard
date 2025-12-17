@@ -1,12 +1,35 @@
-from explainability.project_1.diagrams import *
+# explainability/diagrams.py
+
+from explainability.project_1.diagrams import (
+    build_clean_bag_of_phrases_network,
+    build_analyze_popularity_network,
+    build_find_k_plexes_network,
+    build_combined_network as build_news_combined_network,
+    render_pyvis as render_pyvis_project_1,
+)
+
+from explainability.project_2.diagrams import (
+    build_weakness_network,
+    build_deformation_network,
+    build_combined_network as build_track_combined_network,
+    render_pyvis as render_pyvis_project_2,
+)
 
 __all__ = [
-    "render_pyvis",
+    # Project 1
     "build_clean_bag_of_phrases_network",
     "build_analyze_popularity_network",
     "build_find_k_plexes_network",
-    "build_combined_network",
+    "build_news_combined_network",
+    "render_pyvis_project_1",
+
+    # Project 2
+    "build_weakness_network",
+    "build_deformation_network",
+    "build_track_combined_network",
+    "render_pyvis_project_2",
 ]
+
 
 
 # from pyvis.network import Network
