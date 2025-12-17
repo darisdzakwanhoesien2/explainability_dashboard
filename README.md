@@ -1,3 +1,7 @@
+Explainability LLM: https://chatgpt.com/g/g-69421313ba7881919c39d4fbf3c101f9-explainability-pipeline-generator/c/694214dc-d668-8330-9ed4-60cb04d5ef5f
+Jupyter Notebook Converter: https://chatgpt.com/c/6942132b-adf8-832d-ac45-f5ed5ac2e40d
+
+
 Yes — this is very doable, and it fits **perfectly** with your Streamlit-heavy workflow.
 
 Below is a **clean, production-ready Streamlit app** that:
