@@ -1,5 +1,17 @@
+# ============================================================
 # explainability/diagrams.py
+# ============================================================
+# Global Explainability Registry + Streamlit Page
+# ============================================================
 
+import streamlit as st
+import tempfile
+import os
+from typing import Callable, Dict
+
+# ============================================================
+# ===================== PROJECT 1 ============================
+# ============================================================
 from explainability.project_1.diagrams import (
     build_clean_bag_of_phrases_network,
     build_analyze_popularity_network,
@@ -8,6 +20,9 @@ from explainability.project_1.diagrams import (
     render_pyvis as render_pyvis_project_1,
 )
 
+# ============================================================
+# ===================== PROJECT 2 ============================
+# ============================================================
 from explainability.project_2.diagrams import (
     build_weakness_network,
     build_deformation_network,
@@ -15,20 +30,343 @@ from explainability.project_2.diagrams import (
     render_pyvis as render_pyvis_project_2,
 )
 
+# ============================================================
+# ===================== PROJECT 3 ============================
+# ============================================================
+from explainability.project_3.diagrams import (
+    build_explainability_dag as build_dr_explainability_network,
+)
+
+# ============================================================
+# ===================== PROJECT 4 ============================
+# ============================================================
+from explainability.project_4.diagrams import (
+    build_step_1_network,
+    build_step_2_network,
+    build_step_3_network,
+    build_step_4_network,
+    build_step_5_network,
+    build_step_6_network,
+    build_step_7_network,
+    build_step_8_network,
+    build_combined_network as build_parliament_combined_network,
+)
+
+# ============================================================
+# ===================== PUBLIC EXPORT ========================
+# ============================================================
 __all__ = [
     # Project 1
     "build_clean_bag_of_phrases_network",
     "build_analyze_popularity_network",
     "build_find_k_plexes_network",
     "build_news_combined_network",
-    "render_pyvis_project_1",
 
     # Project 2
     "build_weakness_network",
     "build_deformation_network",
     "build_track_combined_network",
-    "render_pyvis_project_2",
+
+    # Project 3
+    "build_dr_explainability_network",
+
+    # Project 4
+    "build_step_1_network",
+    "build_step_2_network",
+    "build_step_3_network",
+    "build_step_4_network",
+    "build_step_5_network",
+    "build_step_6_network",
+    "build_step_7_network",
+    "build_step_8_network",
+    "build_parliament_combined_network",
+
+    # Page
+    "render_explainability_page",
 ]
+
+# ============================================================
+# ===================== PYVIS RENDERER =======================
+# ============================================================
+def render_pyvis_network(net, height: int = 800):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp:
+        net.save_graph(tmp.name)
+        html_path = tmp.name
+
+    with open(html_path, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    st.components.v1.html(html, height=height, scrolling=True)
+    os.remove(html_path)
+
+
+# ============================================================
+# ===================== REGISTRY =============================
+# ============================================================
+NETWORK_REGISTRY: Dict[str, Dict[str, Callable]] = {
+    "Project 1 – News Analytics": {
+        "Clean Bag of Phrases": build_clean_bag_of_phrases_network,
+        "Analyze Popularity": build_analyze_popularity_network,
+        "Find K-Plexes": build_find_k_plexes_network,
+        "Combined Pipeline": build_news_combined_network,
+    },
+    "Project 2 – Track Geometry": {
+        "Weakness Detection": build_weakness_network,
+        "Deformation Analysis": build_deformation_network,
+        "Combined Pipeline": build_track_combined_network,
+    },
+    "Project 3 – Diabetic Retinopathy": {
+        "Training & Explainability Pipeline": build_dr_explainability_network,
+    },
+    "Project 4 – Parliamentary NLP": {
+        "Step 1 – Text Preprocessing": build_step_1_network,
+        "Step 2 – Exploratory Analysis": build_step_2_network,
+        "Step 3 – Sentiment Normalization": build_step_3_network,
+        "Step 4 – Word Frequency": build_step_4_network,
+        "Step 5 – Similarity Computation": build_step_5_network,
+        "Step 6 – Clustering": build_step_6_network,
+        "Step 7 – Topic Modeling": build_step_7_network,
+        "Step 8 – NER & Emotion Prediction": build_step_8_network,
+        "Combined Pipeline": build_parliament_combined_network,
+    },
+}
+
+
+# ============================================================
+# ===================== STREAMLIT PAGE =======================
+# ============================================================
+def render_explainability_page():
+    st.set_page_config(page_title="Explainability Diagrams", layout="wide")
+
+    st.title("🧠 Explainability Diagrams")
+    st.markdown(
+        """
+        Interactive **explainability DAGs** for all projects.
+        Each diagram represents full data, model, and analysis flow.
+        """
+    )
+
+    st.sidebar.header("Navigation")
+
+    project_name = st.sidebar.selectbox(
+        "Select Project",
+        list(NETWORK_REGISTRY.keys()),
+    )
+
+    diagram_name = st.sidebar.selectbox(
+        "Select Diagram",
+        list(NETWORK_REGISTRY[project_name].keys()),
+    )
+
+    st.subheader(project_name)
+    st.caption(diagram_name)
+
+    build_fn = NETWORK_REGISTRY[project_name][diagram_name]
+    network = build_fn()
+
+    render_pyvis_network(network)
+
+
+if __name__ == "__main__":
+    render_explainability_page()
+
+
+# # explainability/diagrams.py
+# # ============================================================
+# # Global Explainability Registry + Streamlit Page
+# # ============================================================
+# # This module aggregates explainability DAGs from:
+# #   - project_1
+# #   - project_2
+# #   - project_3
+# #
+# # It also exposes a unified Streamlit page for browsing
+# # and rendering PyVis-based explainability diagrams.
+# # ============================================================
+
+# import streamlit as st
+# import tempfile
+# import os
+# from typing import Callable, Dict
+
+# # ============================================================
+# # ===================== PROJECT 1 ============================
+# # ============================================================
+# from explainability.project_1.diagrams import (
+#     build_clean_bag_of_phrases_network,
+#     build_analyze_popularity_network,
+#     build_find_k_plexes_network,
+#     build_combined_network as build_news_combined_network,
+#     render_pyvis as render_pyvis_project_1,
+# )
+
+# # ============================================================
+# # ===================== PROJECT 2 ============================
+# # ============================================================
+# from explainability.project_2.diagrams import (
+#     build_weakness_network,
+#     build_deformation_network,
+#     build_combined_network as build_track_combined_network,
+#     render_pyvis as render_pyvis_project_2,
+# )
+
+# # ============================================================
+# # ===================== PROJECT 3 ============================
+# # ============================================================
+# from explainability.project_3.diagrams import (
+#     build_explainability_dag as build_dr_explainability_network,
+# )
+
+# # ============================================================
+# # ===================== PUBLIC EXPORT ========================
+# # ============================================================
+# __all__ = [
+#     # -------- Project 1 --------
+#     "build_clean_bag_of_phrases_network",
+#     "build_analyze_popularity_network",
+#     "build_find_k_plexes_network",
+#     "build_news_combined_network",
+#     "render_pyvis_project_1",
+
+#     # -------- Project 2 --------
+#     "build_weakness_network",
+#     "build_deformation_network",
+#     "build_track_combined_network",
+#     "render_pyvis_project_2",
+
+#     # -------- Project 3 --------
+#     "build_dr_explainability_network",
+
+#     # -------- Page --------
+#     "render_explainability_page",
+# ]
+
+# # ============================================================
+# # ===================== PYVIS RENDERER =======================
+# # ============================================================
+# def render_pyvis_network(net, height: int = 800):
+#     """
+#     Generic PyVis renderer for Streamlit.
+#     """
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp:
+#         net.save_graph(tmp.name)
+#         html_path = tmp.name
+
+#     with open(html_path, "r", encoding="utf-8") as f:
+#         html = f.read()
+
+#     st.components.v1.html(html, height=height, scrolling=True)
+#     os.remove(html_path)
+
+
+# # ============================================================
+# # ===================== REGISTRY =============================
+# # ============================================================
+# NETWORK_REGISTRY: Dict[str, Dict[str, Callable]] = {
+#     "Project 1 – News Analytics": {
+#         "Clean Bag of Phrases": build_clean_bag_of_phrases_network,
+#         "Analyze Popularity": build_analyze_popularity_network,
+#         "Find K-Plexes": build_find_k_plexes_network,
+#         "Combined Pipeline": build_news_combined_network,
+#     },
+#     "Project 2 – Track Geometry": {
+#         "Weakness Detection": build_weakness_network,
+#         "Deformation Analysis": build_deformation_network,
+#         "Combined Pipeline": build_track_combined_network,
+#     },
+#     "Project 3 – Diabetic Retinopathy": {
+#         "Training & Explainability Pipeline": build_dr_explainability_network,
+#     },
+# }
+
+
+# # ============================================================
+# # ===================== STREAMLIT PAGE =======================
+# # ============================================================
+# def render_explainability_page():
+#     """
+#     Unified Explainability Page for all projects.
+#     """
+#     st.set_page_config(
+#         page_title="Explainability Diagrams",
+#         layout="wide",
+#     )
+
+#     st.title("🧠 Explainability Diagrams")
+#     st.markdown(
+#         """
+#         This page provides **interactive explainability DAGs**
+#         for all projects in the course.
+
+#         Each diagram is built using **PyVis** and represents:
+#         - Data flow
+#         - Model logic
+#         - Training strategy
+#         - Evaluation and outputs
+#         """
+#     )
+
+#     # ---------------- Sidebar ----------------
+#     st.sidebar.header("Navigation")
+
+#     project_name = st.sidebar.selectbox(
+#         "Select Project",
+#         list(NETWORK_REGISTRY.keys()),
+#     )
+
+#     diagram_name = st.sidebar.selectbox(
+#         "Select Diagram",
+#         list(NETWORK_REGISTRY[project_name].keys()),
+#     )
+
+#     # ---------------- Render ----------------
+#     st.subheader(f"{project_name}")
+#     st.caption(diagram_name)
+
+#     build_fn = NETWORK_REGISTRY[project_name][diagram_name]
+#     network = build_fn()
+
+#     render_pyvis_network(network)
+
+
+# # ============================================================
+# # ===================== ENTRY POINT ==========================
+# # ============================================================
+# if __name__ == "__main__":
+#     render_explainability_page()
+
+
+# # explainability/diagrams.py
+
+# from explainability.project_1.diagrams import (
+#     build_clean_bag_of_phrases_network,
+#     build_analyze_popularity_network,
+#     build_find_k_plexes_network,
+#     build_combined_network as build_news_combined_network,
+#     render_pyvis as render_pyvis_project_1,
+# )
+
+# from explainability.project_2.diagrams import (
+#     build_weakness_network,
+#     build_deformation_network,
+#     build_combined_network as build_track_combined_network,
+#     render_pyvis as render_pyvis_project_2,
+# )
+
+# __all__ = [
+#     # Project 1
+#     "build_clean_bag_of_phrases_network",
+#     "build_analyze_popularity_network",
+#     "build_find_k_plexes_network",
+#     "build_news_combined_network",
+#     "render_pyvis_project_1",
+
+#     # Project 2
+#     "build_weakness_network",
+#     "build_deformation_network",
+#     "build_track_combined_network",
+#     "render_pyvis_project_2",
+# ]
 
 
 
